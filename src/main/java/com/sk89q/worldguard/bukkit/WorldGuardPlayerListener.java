@@ -34,7 +34,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
-import org.bukkit.event.Event.Type;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -47,7 +46,6 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -75,7 +73,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 /**
  * Handles all events thrown in relation to a player.
  */
-public class WorldGuardPlayerListener extends PlayerListener {
+public class WorldGuardPlayerListener implements Listener {
 
     /**
      * Logger for messages.
@@ -101,9 +99,7 @@ public class WorldGuardPlayerListener extends PlayerListener {
         pm.registerEvents(this, plugin);
 
         if (plugin.getGlobalStateManager().usePlayerMove) {
-            //EventExecutor executor = null;
-            //pm.registerEvent(PlayerMoveEvent.class, this, EventPriority.HIGH, executor, plugin);
-            pm.registerEvent(Type.PLAYER_MOVE, this, PlayerMoveEvent.Priority.High, plugin);
+            pm.setEventPriority(PlayerMoveEvent.class, this, EventPriority.HIGH);
         }
     }
 
@@ -246,7 +242,7 @@ public class WorldGuardPlayerListener extends PlayerListener {
      *
      * @param event
      */
-    //@EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.DISABLED)
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         World world = player.getWorld();
